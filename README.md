@@ -2,20 +2,20 @@
 
 # MemoMorf
 
-Local-first desktop audio transcription with clip selection, model caching, and optional speaker diarization
+Local-first desktop audio transcription with clip selection, model caching, and optional speaker diarization.
 
 ![Python 3.10+](https://img.shields.io/badge/Python-3.10%2B-3776AB?style=flat-square&logo=python&logoColor=white)
 ![Windows](https://img.shields.io/badge/Platform-Windows-0078D6?style=flat-square&logo=windows&logoColor=white)
 ![License: MIT](https://img.shields.io/badge/License-MIT-111111?style=flat-square)
 ![Local First](https://img.shields.io/badge/Workflow-Local%20First-0F766E?style=flat-square)
 
-Built with CustomTkinter, faster-whisper, and optional pyannote speaker diarization
+Built with CustomTkinter, faster-whisper, and optional pyannote speaker diarization.
 
 </div>
 
 ![MemoMorf application screenshot](assets/memomorf-screenshot.png)
 
-> Fast local transcription, waveform-backed clip selection, reusable model downloads, and speaker-aware transcript review in one desktop workflow
+> Fast local transcription, waveform-backed clip selection, reusable model downloads, and speaker-aware transcript review in one desktop workflow.
 
 ## Why MemoMorf
 
@@ -118,9 +118,9 @@ Build the Windows app:
 .\build_windows_exe.ps1
 ```
 
-The packaged app is written to `dist\MemoMorf`
-Run `dist\MemoMorf\MemoMorf.exe` after packaging
-Do not launch the intermediate executable from the `build` folder
+The packaged app is written to `dist\MemoMorf`.
+Run `dist\MemoMorf\MemoMorf.exe` after packaging.
+Do not launch the intermediate executable from the `build` folder.
 
 ## Supported Audio Formats
 
@@ -139,7 +139,7 @@ Do not launch the intermediate executable from the `build` folder
 
 ## Speaker Diarization
 
-Speaker-labeled modes depend on `pyannote/speaker-diarization-community-1`
+Speaker-labeled modes depend on `pyannote/speaker-diarization-community-1`.
 
 Before using speaker-labeled output:
 
@@ -168,7 +168,7 @@ Notes:
 
 ## License
 
-This repository includes the MIT license for the app source code in `LICENSE`
+This repository includes the MIT license for the app source code in `LICENSE`.
 
-Third-party packages remain under their own licenses
-See `THIRD_PARTY_NOTICES.md` for a short summary
+Third-party packages remain under their own licenses.
+See `THIRD_PARTY_NOTICES.md` for a short summary.

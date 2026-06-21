@@ -1,9 +1,21 @@
+<div align="center">
+
 # MemoMorf
 
-MemoMorf is a local-first desktop app for CPU-based transcription, clip selection, and speaker-aware transcript review
-It is built with CustomTkinter, faster-whisper, and optional pyannote speaker diarization
+Local-first desktop audio transcription with clip selection, model caching, and optional speaker diarization
+
+![Python 3.10+](https://img.shields.io/badge/Python-3.10%2B-3776AB?style=flat-square&logo=python&logoColor=white)
+![Windows](https://img.shields.io/badge/Platform-Windows-0078D6?style=flat-square&logo=windows&logoColor=white)
+![License: MIT](https://img.shields.io/badge/License-MIT-111111?style=flat-square)
+![Local First](https://img.shields.io/badge/Workflow-Local%20First-0F766E?style=flat-square)
+
+Built with CustomTkinter, faster-whisper, and optional pyannote speaker diarization
+
+</div>
 
 ![MemoMorf application screenshot](assets/memomorf-screenshot.png)
+
+> Fast local transcription, waveform-backed clip selection, reusable model downloads, and speaker-aware transcript review in one desktop workflow
 
 ## Why MemoMorf
 

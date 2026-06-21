@@ -1,0 +1,13 @@
+.venv/
+.models/
+.transcriber_settings.json
+.hf_test/
+.hf_test2/
+build/
+dist/
+*.spec
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*_transcript.txt

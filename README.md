@@ -2,7 +2,7 @@
 
 # MemoMorf
 
-Local-first desktop audio transcription with clip selection, model caching, and optional speaker diarization.
+Local-first desktop audio and video transcription with clip selection, model caching, and optional speaker diarization.
 
 ![Python 3.10+](https://img.shields.io/badge/Python-3.10%2B-3776AB?style=flat-square&logo=python&logoColor=white)
 ![Windows](https://img.shields.io/badge/Platform-Windows-0078D6?style=flat-square&logo=windows&logoColor=white)
@@ -21,7 +21,7 @@ Built with CustomTkinter, faster-whisper, and optional pyannote speaker diarizat
 
 | Focus | What you get |
 | --- | --- |
-| Local workflow | Transcribe audio on your machine without a hosted transcription service |
+| Local workflow | Transcribe audio and video on your machine without a hosted transcription service |
 | CPU friendly | Uses `compute_type="int8"` for practical CPU inference |
 | Better control | Pause, resume, stop, preview clips, and transcribe only the range you need |
 | Reusable models | Keep downloaded models in a local `.models` cache and manage them from the UI |
@@ -40,7 +40,7 @@ Built with CustomTkinter, faster-whisper, and optional pyannote speaker diarizat
 
 ```mermaid
 flowchart LR
-	A[Choose audio file] --> B[Set language, model, and speed]
+	A[Choose audio or video file] --> B[Set language, model, and speed]
 	B --> C[Optionally trim to a clip range]
 	C --> D[Run transcription locally]
 	D --> E[Review raw or paragraph transcript]
@@ -54,7 +54,7 @@ flowchart LR
 
 ```mermaid
 flowchart TB
-	UI[CustomTkinter desktop UI] --> AUDIO[Audio loading and clip selection]
+	UI[CustomTkinter desktop UI] --> AUDIO[Media loading and clip selection]
 	UI --> WHISPER[faster-whisper transcription]
 	UI --> CACHE[Local model cache manager]
 	UI --> SETTINGS[Local settings file]
@@ -101,7 +101,7 @@ Launch the app:
 
 ```powershell
 .\.venv\Scripts\Activate.ps1
-python .\local_audio_transcriber.py
+python .\memomorf.py
 ```
 
 ## Packaging
@@ -122,18 +122,20 @@ The packaged app is written to `dist\MemoMorf`.
 Run `dist\MemoMorf\MemoMorf.exe` after packaging.
 Do not launch the intermediate executable from the `build` folder.
 
-## Supported Audio Formats
+## Supported Media Formats
 
 - `.m4a`
 - `.mp3`
 - `.wav`
 - `.aac`
 - `.3gp`
+- `.mp4` (audio track of the video is transcribed)
 
 ## Storage And Caching
 
 - Whisper models are stored in the local `.models` folder
-- UI settings are stored in `.transcriber_settings.json`
+- UI settings are stored in `.memomorf_settings.json`
+- Settings from an older `.transcriber_settings.json` are adopted automatically on first run
 - Speaker diarization downloads its own Hugging Face cache on first use
 - The `Clear Model Cache` action removes local model data and forces a fresh download later
 

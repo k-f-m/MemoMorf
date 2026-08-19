@@ -18,15 +18,19 @@ DEFAULT_SETTINGS = {
 
 
 class SettingsManager:
-    def __init__(self, file_path: Path) -> None:
+    def __init__(self, file_path: Path, legacy_file_path: Path | None = None) -> None:
         self.file_path = file_path
+        self.legacy_file_path = legacy_file_path
 
     def load(self) -> dict[str, Any]:
-        if not self.file_path.exists():
+        source = self.file_path
+        if not source.exists():
+            source = self._find_legacy_settings_file()
+        if source is None:
             return DEFAULT_SETTINGS.copy()
 
         try:
-            settings = json.loads(self.file_path.read_text(encoding="utf-8"))
+            settings = json.loads(source.read_text(encoding="utf-8"))
         except (OSError, json.JSONDecodeError):
             return DEFAULT_SETTINGS.copy()
 
@@ -35,6 +39,12 @@ class SettingsManager:
             if key in settings:
                 merged[key] = settings[key]
         return merged
+
+    def _find_legacy_settings_file(self) -> Path | None:
+        """Return the pre-rename settings file when it is the only one present."""
+        if self.legacy_file_path is not None and self.legacy_file_path.exists():
+            return self.legacy_file_path
+        return None
 
     def save(self, settings: dict[str, Any]) -> None:
         payload = DEFAULT_SETTINGS.copy()

@@ -4,10 +4,11 @@ from pathlib import Path
 
 
 APP_NAME = "MemoMorf"
-APP_VERSION = "1.4.0"
+APP_VERSION = "1.5.0"
 APP_DIR = Path(__file__).resolve().parent.parent
 MODEL_CACHE_DIR = APP_DIR / ".models"
-SETTINGS_FILE = APP_DIR / ".transcriber_settings.json"
+SETTINGS_FILE = APP_DIR / ".memomorf_settings.json"
+LEGACY_SETTINGS_FILE = APP_DIR / ".transcriber_settings.json"
 
 TRANSCRIPT_VIEW_MODES = (
     "Raw",
@@ -20,8 +21,10 @@ DEFAULT_TRANSCRIPT_VIEW_MODE = TRANSCRIPT_VIEW_MODES[0]
 PARAGRAPH_BREAK_SECONDS = 1.75
 SPEAKER_DIARIZATION_MODEL = "pyannote/speaker-diarization-community-1"
 
-SUPPORTED_EXTENSIONS = (".m4a", ".mp3", ".wav", ".aac", ".3gp")
-COMPRESSED_EXTENSIONS = {".m4a", ".mp3", ".aac", ".3gp"}
+SUPPORTED_EXTENSIONS = (".m4a", ".mp3", ".wav", ".aac", ".3gp", ".mp4")
+COMPRESSED_EXTENSIONS = {".m4a", ".mp3", ".aac", ".3gp", ".mp4"}
+SUPPORTED_FILE_DIALOG_PATTERN = " ".join(f"*{extension}" for extension in SUPPORTED_EXTENSIONS)
+COMPRESSED_EXTENSIONS_LABEL = ", ".join(sorted(COMPRESSED_EXTENSIONS))
 
 LANGUAGE_MAP = {
     "Auto-Detect": None,

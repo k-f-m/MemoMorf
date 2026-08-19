@@ -76,7 +76,7 @@ public static class IconTools {
     --collect-all torch `
     --collect-all torchaudio `
     --collect-all torchcodec `
-    .\local_audio_transcriber.py
+    .\memomorf.py
 
 Write-Host ""
 Write-Host "Build complete. Run the packaged app from:" -ForegroundColor Green

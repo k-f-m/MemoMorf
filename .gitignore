@@ -1,5 +1,6 @@
 .venv/
 .models/
+.memomorf_settings.json
 .transcriber_settings.json
 .hf_test/
 .hf_test2/

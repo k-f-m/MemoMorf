@@ -24,8 +24,10 @@ from .constants import (
     APP_NAME,
     APP_VERSION,
     COMPRESSED_EXTENSIONS,
+    COMPRESSED_EXTENSIONS_LABEL,
     DEFAULT_TRANSCRIPT_VIEW_MODE,
     LANGUAGE_MAP,
+    LEGACY_SETTINGS_FILE,
     MODEL_CACHE_DIR,
     MODEL_DISPLAY_NAMES,
     MODEL_DISPLAY_ORDER,
@@ -34,6 +36,7 @@ from .constants import (
     MODEL_UI_LABELS,
     SETTINGS_FILE,
     SUPPORTED_EXTENSIONS,
+    SUPPORTED_FILE_DIALOG_PATTERN,
     TRANSCRIPT_VIEW_MODES,
     TRANSCRIPTION_PRESETS,
 )
@@ -100,7 +103,7 @@ class MemoMorfApp(ctk.CTk):
             display_names=MODEL_DISPLAY_NAMES,
             display_order=MODEL_DISPLAY_ORDER,
         )
-        self.settings_manager = SettingsManager(SETTINGS_FILE)
+        self.settings_manager = SettingsManager(SETTINGS_FILE, LEGACY_SETTINGS_FILE)
 
         self.selected_file: Path | None = None
         self.transcript_segments: list[TranscriptSegment] = []
@@ -133,14 +136,14 @@ class MemoMorfApp(ctk.CTk):
         self.transcript_view_var = ctk.StringVar(value=DEFAULT_TRANSCRIPT_VIEW_MODE)
         self.clip_start_var = ctk.StringVar(value="")
         self.clip_end_var = ctk.StringVar(value="")
-        self.status_var = ctk.StringVar(value="Ready. Select an audio file to begin.")
-        self.file_var = ctk.StringVar(value="No audio file selected yet")
+        self.status_var = ctk.StringVar(value="Ready. Select a media file to begin.")
+        self.file_var = ctk.StringVar(value="No media file selected yet")
         self.download_var = ctk.StringVar(value="No model activity yet")
         self.version_var = ctk.StringVar(value=f"Version {APP_VERSION}")
         self.selected_downloaded_model_var = ctk.StringVar(value="")
-        self.audio_duration_var = ctk.StringVar(value="Duration: No audio loaded")
+        self.audio_duration_var = ctk.StringVar(value="Duration: No media loaded")
         self.clip_selection_var = ctk.StringVar(value="Selected clip: Full file")
-        self.readiness_var = ctk.StringVar(value="Ready check: Select an audio file.")
+        self.readiness_var = ctk.StringVar(value="Ready check: Select a media file.")
 
         self._build_ui()
         self._load_settings()
@@ -204,14 +207,14 @@ class MemoMorfApp(ctk.CTk):
 
         source_title = ctk.CTkLabel(
             source_frame,
-            text="1. Select Audio",
+            text="1. Select Media",
             font=ctk.CTkFont(size=18, weight="bold"),
         )
         source_title.grid(row=0, column=0, sticky="w")
 
         source_hint = ctk.CTkLabel(
             source_frame,
-            text="Choose a local audio file. Compressed formats require FFmpeg.",
+            text="Choose a local audio or video file. Compressed formats require FFmpeg.",
             anchor="w",
             justify="left",
             wraplength=280,
@@ -221,7 +224,7 @@ class MemoMorfApp(ctk.CTk):
 
         browse_button = ctk.CTkButton(
             source_frame,
-            text="Browse Audio File",
+            text="Browse Media File",
             command=self.browse_file,
             height=42,
             fg_color="#0f766e",
@@ -645,10 +648,10 @@ class MemoMorfApp(ctk.CTk):
 
     def browse_file(self) -> None:
         file_path = filedialog.askopenfilename(
-            title="Select an audio file",
+            title="Select an audio or video file",
             filetypes=[(
-                "Supported audio files",
-                "*.m4a *.mp3 *.wav *.aac *.3gp",
+                "Supported media files",
+                SUPPORTED_FILE_DIALOG_PATTERN,
             )],
         )
         if not file_path:
@@ -671,7 +674,7 @@ class MemoMorfApp(ctk.CTk):
             return
 
         if self.selected_file is None:
-            self.status_var.set("Please select an audio file first.")
+            self.status_var.set("Please select a media file first.")
             return
 
         if self.selected_file.suffix.lower() not in SUPPORTED_EXTENSIONS:
@@ -679,9 +682,9 @@ class MemoMorfApp(ctk.CTk):
             return
 
         if self._requires_ffmpeg(self.selected_file):
-            self.status_var.set("FFmpeg not found for compressed audio input.")
+            self.status_var.set("FFmpeg not found for compressed media input.")
             self._show_ffmpeg_guidance(
-                "FFmpeg is required for this audio format on this machine.\n\n"
+                "FFmpeg is required for this media format on this machine.\n\n"
                 f"Selected file: {self.selected_file.name}\n\n"
                 "Install it with:\n"
                 "winget install Gyan.FFmpeg\n\n"
@@ -894,7 +897,7 @@ class MemoMorfApp(ctk.CTk):
         if self.selected_file is None:
             self.audio_duration_seconds = None
             self.audio_waveform_points = []
-            self.audio_duration_var.set("Duration: No audio loaded")
+            self.audio_duration_var.set("Duration: No media loaded")
             self._configure_clip_selector()
             return
 
@@ -1025,14 +1028,14 @@ class MemoMorfApp(ctk.CTk):
     def set_last_five_minutes_clip(self) -> None:
         duration = self.audio_duration_seconds
         if duration is None:
-            self.clip_selection_var.set("Selected clip: Load an audio file first")
+            self.clip_selection_var.set("Selected clip: Load a media file first")
             return
         self._set_preset_clip(max(0.0, duration - 300.0), duration)
 
     def set_current_30_second_clip(self) -> None:
         duration = self.audio_duration_seconds
         if duration is None:
-            self.clip_selection_var.set("Selected clip: Load an audio file first")
+            self.clip_selection_var.set("Selected clip: Load a media file first")
             return
 
         try:
@@ -1054,7 +1057,7 @@ class MemoMorfApp(ctk.CTk):
 
     def _set_preset_clip(self, start_seconds: float, end_seconds: float) -> None:
         if self.audio_duration_seconds is None:
-            self.clip_selection_var.set("Selected clip: Load an audio file first")
+            self.clip_selection_var.set("Selected clip: Load a media file first")
             return
         self._set_clip_values(start_seconds, end_seconds)
 
@@ -1066,7 +1069,7 @@ class MemoMorfApp(ctk.CTk):
             return
 
         if self.selected_file is None:
-            self.status_var.set("Select an audio file before previewing a clip.")
+            self.status_var.set("Select a media file before previewing a clip.")
             return
 
         clip_range = self._get_clip_range()
@@ -1114,14 +1117,14 @@ class MemoMorfApp(ctk.CTk):
         issues: list[str] = []
 
         if self.selected_file is None:
-            issues.append("Select an audio file.")
+            issues.append("Select a media file.")
             return issues
 
         if self.selected_file.suffix.lower() not in SUPPORTED_EXTENSIONS:
-            issues.append("Select a supported audio file type.")
+            issues.append("Select a supported media file type.")
 
         if self._requires_ffmpeg(self.selected_file):
-            issues.append("Install FFmpeg for compressed audio input on this machine.")
+            issues.append("Install FFmpeg for compressed media input on this machine.")
 
         try:
             self._get_clip_range()
@@ -1433,7 +1436,7 @@ class MemoMorfApp(ctk.CTk):
         self._save_settings()
         self._show_ffmpeg_guidance(
             "FFmpeg was not found on this computer.\n\n"
-            "Compressed formats such as .m4a, .mp3, .aac, and .3gp may fail without it.\n\n"
+            f"Compressed formats such as {COMPRESSED_EXTENSIONS_LABEL} may fail without it.\n\n"
             "Recommended Windows fix:\n"
             "1. Open PowerShell\n"
             "2. Run: winget install Gyan.FFmpeg\n"
